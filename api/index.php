@@ -14,6 +14,19 @@ if (file_exists('/var/task/user')) {
     $basePath = '/var/task/user';
 }
 
+// Set cache paths to /tmp before Laravel boots
+putenv('APP_SERVICES_CACHE=/tmp/cache/services.php');
+putenv('APP_PACKAGES_CACHE=/tmp/cache/packages.php');
+putenv('APP_CONFIG_CACHE=/tmp/cache/config.php');
+putenv('APP_ROUTES_CACHE=/tmp/cache/routes.php');
+putenv('APP_EVENTS_CACHE=/tmp/cache/events.php');
+
+$_ENV['APP_SERVICES_CACHE'] = '/tmp/cache/services.php';
+$_ENV['APP_PACKAGES_CACHE'] = '/tmp/cache/packages.php';
+$_ENV['APP_CONFIG_CACHE'] = '/tmp/cache/config.php';
+$_ENV['APP_ROUTES_CACHE'] = '/tmp/cache/routes.php';
+$_ENV['APP_EVENTS_CACHE'] = '/tmp/cache/events.php';
+
 // Check if vendor exists
 if (!file_exists($basePath . '/vendor/autoload.php')) {
     http_response_code(500);
@@ -32,9 +45,8 @@ if (!getenv('APP_KEY') && !isset($_ENV['APP_KEY'])) {
 try {
     $app = require_once $basePath . '/bootstrap/app.php';
 
-    // Override storage and cache paths for /tmp (read-only filesystem workaround)
+    // Override storage path for /tmp (read-only filesystem workaround)
     $app->useStoragePath('/tmp/storage');
-    $app->useCachePath('/tmp/cache');
 
     // Create necessary directories
     $dirs = [
