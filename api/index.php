@@ -8,13 +8,16 @@ ini_set('memory_limit', '512M');
 // Define base path
 define('LARAVEL_START', microtime(true));
 
-// Set up paths for serverless
-$_ENV['APP_BASE_PATH'] = $_ENV['LAMBDA_TASK_ROOT'] ?? dirname(__DIR__);
+// Determine the correct base path for Vercel
+$basePath = $_ENV['LAMBDA_TASK_ROOT'] ?? dirname(__DIR__);
+if (file_exists('/var/task/user')) {
+    $basePath = '/var/task/user';
+}
 
 // Bootstrap Laravel
-require $_ENV['APP_BASE_PATH'] . '/vendor/autoload.php';
+require $basePath . '/vendor/autoload.php';
 
-$app = require_once $_ENV['APP_BASE_PATH'] . '/bootstrap/app.php';
+$app = require_once $basePath . '/bootstrap/app.php';
 
 // Override storage paths for /tmp
 $app->useStoragePath('/tmp/storage');
