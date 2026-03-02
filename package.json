@@ -4,7 +4,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "vercel-build": "npm run build"
+        "vercel-build": "npm run build && composer install --no-dev --optimize-autoloader --no-interaction"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.20",

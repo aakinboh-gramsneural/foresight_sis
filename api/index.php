@@ -9,9 +9,21 @@ ini_set('memory_limit', '512M');
 define('LARAVEL_START', microtime(true));
 
 // Determine the correct base path for Vercel
-$basePath = $_ENV['LAMBDA_TASK_ROOT'] ?? dirname(__DIR__);
-if (file_exists('/var/task/user')) {
-    $basePath = '/var/task/user';
+// On Vercel, files are in /var/task/user/
+$basePath = dirname(__DIR__);
+
+// Check multiple possible locations
+$possiblePaths = [
+    '/var/task/user',
+    $_ENV['LAMBDA_TASK_ROOT'] ?? null,
+    $basePath
+];
+
+foreach ($possiblePaths as $path) {
+    if ($path && file_exists($path . '/vendor/autoload.php')) {
+        $basePath = $path;
+        break;
+    }
 }
 
 // Set cache paths to /tmp before Laravel boots
@@ -27,10 +39,22 @@ $_ENV['APP_CONFIG_CACHE'] = '/tmp/cache/config.php';
 $_ENV['APP_ROUTES_CACHE'] = '/tmp/cache/routes.php';
 $_ENV['APP_EVENTS_CACHE'] = '/tmp/cache/events.php';
 
-// Check if vendor exists
+// Verify vendor exists
 if (!file_exists($basePath . '/vendor/autoload.php')) {
     http_response_code(500);
-    die('Error: Composer autoload not found at: ' . $basePath . '/vendor/autoload.php');
+    echo "Error: Composer autoload not found.\n";
+    echo "Checked paths:\n";
+    foreach ($possiblePaths as $path) {
+        if ($path) {
+            echo "- $path/vendor/autoload.php: " . (file_exists($path . '/vendor/autoload.php') ? 'EXISTS' : 'NOT FOUND') . "\n";
+        }
+    }
+    echo "\nCurrent working directory: " . getcwd() . "\n";
+    echo "Files in /var/task/: " . (is_dir('/var/task/') ? implode(', ', scandir('/var/task/')) : 'NOT A DIRECTORY') . "\n";
+    if (is_dir('/var/task/user/')) {
+        echo "Files in /var/task/user/: " . implode(', ', array_slice(scandir('/var/task/user/'), 0, 20)) . "\n";
+    }
+    die();
 }
 
 // Bootstrap Laravel
