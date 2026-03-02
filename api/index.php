@@ -2,10 +2,6 @@
 
 // Vercel serverless entry point for Laravel
 
-// Enable error display for debugging
-ini_set('display_errors', '1');
-error_reporting(E_ALL);
-
 // Set memory limit
 ini_set('memory_limit', '512M');
 
@@ -36,8 +32,9 @@ if (!getenv('APP_KEY') && !isset($_ENV['APP_KEY'])) {
 try {
     $app = require_once $basePath . '/bootstrap/app.php';
 
-    // Override storage paths for /tmp
+    // Override storage and cache paths for /tmp (read-only filesystem workaround)
     $app->useStoragePath('/tmp/storage');
+    $app->useCachePath('/tmp/cache');
 
     // Create necessary directories
     $dirs = [
@@ -47,6 +44,7 @@ try {
         '/tmp/storage/framework/cache/data',
         '/tmp/storage/logs',
         '/tmp/storage/app',
+        '/tmp/cache',
     ];
 
     foreach ($dirs as $dir) {
