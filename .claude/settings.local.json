@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(textutil:*)",
+      "WebFetch(domain:www.foresightcgc.com)",
+      "Bash(curl:*)",
+      "Bash(# Extract image references grep -oP ''[\"\"\\\\x27][^\"\"\\\\x27]*\\\\.\\(png|jpg|jpeg|svg|webp|gif|avif\\)[^\"\"\\\\x27]*[\"\"\\\\x27]'' \"\"/Users/abrahambossey/.claude/projects/-Users-abrahambossey-web-projects-foresight/5c20bb20-4fcf-4806-ae66-ef4b4bc7e5f8/tool-results/toolu_011RTzLPAXUdJdzeQ8ipRfkD.txt\"\")",
+      "Bash(python3:*)",
+      "Bash(php:*)",
+      "Bash(composer --version:*)",
+      "Bash(mysql:*)",
+      "Bash(brew services:*)",
+      "Bash(# Check if Herd manages MySQL ls ~/Library/Application\\\\ Support/Herd/)",
+      "Bash(/Applications/XAMPP/xamppfiles/bin/mysql:*)",
+      "Bash(composer create-project:*)",
+      "Bash(composer require:*)",
+      "Bash(composer search:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(open http://foresight.test)",
+      "Bash(mailpit:*)",
+      "Bash(grep:*)",
+      "Bash(du -sh:*)",
+      "Bash(file:*)",
+      "Bash(:)",
+      "Bash(chmod:*)",
+      "Bash(composer install:*)"
+    ]
+  }
+}

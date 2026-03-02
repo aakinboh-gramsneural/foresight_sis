@@ -1,0 +1,253 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Base Styles ===== */
+@layer base {
+    /* Alpine.js cloak - hides elements until Alpine initializes */
+    [x-cloak] {
+        display: none !important;
+    }
+
+    html {
+        @apply scroll-smooth;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    body {
+        @apply bg-white text-navy-900 antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Inter', sans-serif;
+        @apply font-bold tracking-tight;
+    }
+
+    /* Custom text selection */
+    ::selection {
+        @apply bg-gold-500/30 text-navy-900;
+    }
+
+    /* Better focus states for accessibility */
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-gold-500;
+    }
+}
+
+/* ===== Component Styles ===== */
+@layer components {
+    /* Premium button styles with shimmer effect */
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-8 py-4 bg-gold-500 text-navy-900 font-heading font-semibold text-sm uppercase tracking-widest rounded-none transition-all duration-300 hover:bg-gold-400 hover:shadow-lg hover:shadow-gold-500/25 hover:-translate-y-0.5 relative overflow-hidden;
+    }
+
+    .btn-primary::after {
+        content: '';
+        @apply absolute inset-0 -translate-x-full;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: transform 0.6s ease;
+    }
+
+    .btn-primary:hover::after {
+        @apply translate-x-full;
+    }
+
+    .btn-outline {
+        @apply inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-heading font-semibold text-sm uppercase tracking-widest rounded-none transition-all duration-300 hover:bg-white hover:text-navy-900 hover:-translate-y-0.5;
+    }
+
+    .btn-outline-dark {
+        @apply inline-flex items-center justify-center px-8 py-4 border-2 border-navy-900 text-navy-900 font-heading font-semibold text-sm uppercase tracking-widest rounded-none transition-all duration-300 hover:bg-navy-900 hover:text-white hover:-translate-y-0.5;
+    }
+
+    /* Section styling */
+    .section-padding {
+        @apply py-20 md:py-28 lg:py-32;
+    }
+
+    .section-title {
+        @apply text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-navy-900 leading-tight;
+    }
+
+    .section-subtitle {
+        @apply text-lg md:text-xl text-navy-600 font-body mt-4 max-w-2xl;
+    }
+
+    .section-tag {
+        @apply inline-block text-xs font-heading font-semibold uppercase tracking-[0.2em] text-gold-600 mb-4;
+    }
+
+    /* Card styling */
+    .card-hover {
+        @apply transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-navy-900/10;
+    }
+
+    /* Gold accent line */
+    .gold-line {
+        @apply w-16 h-1 bg-gold-500;
+    }
+
+    /* Overlay gradient */
+    .overlay-gradient {
+        @apply absolute inset-0 bg-gradient-to-b from-navy-950/70 via-navy-900/50 to-navy-950/80;
+    }
+
+    /* GSAP animation helpers */
+    .gsap-fade-up {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    .gsap-fade-left {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+
+    .gsap-fade-right {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    .gsap-scale-in {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+/* ===== Custom Scrollbar ===== */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0a1628;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c8a960;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #e5b04d;
+}
+
+/* ===== Scroll Progress Bar ===== */
+#scroll-progress {
+    @apply fixed top-0 left-0 h-[3px] bg-gradient-to-r from-gold-500 to-gold-400 z-[100] pointer-events-none;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+/* ===== Hero Carousel ===== */
+.hero-slide {
+    @apply absolute inset-0 transition-opacity duration-1000;
+}
+
+.hero-slide.active {
+    @apply opacity-100 z-10;
+}
+
+.hero-slide.inactive {
+    @apply opacity-0 z-0;
+}
+
+/* ===== Marquee ===== */
+.marquee-track {
+    display: flex;
+    width: max-content;
+}
+
+/* ===== FAQ Accordion ===== */
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+.faq-answer.open {
+    max-height: 500px;
+}
+
+/* ===== Stats Counter ===== */
+.stat-number {
+    @apply text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white tabular-nums;
+}
+
+/* ===== Nav ===== */
+.nav-scrolled {
+    @apply bg-navy-950/90 backdrop-blur-xl shadow-2xl shadow-navy-950/30 py-3;
+    border-bottom: 1px solid rgba(200, 169, 96, 0.08);
+}
+
+.nav-top {
+    @apply bg-transparent py-6;
+}
+
+/* Nav link underline animation */
+.nav-link-underline {
+    @apply relative;
+}
+
+.nav-link-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-1/2 w-0 h-0.5 bg-gold-500 transition-all duration-300;
+    transform: translateX(-50%);
+}
+
+.nav-link-underline:hover::after,
+.nav-link-underline.active::after {
+    @apply w-full;
+}
+
+/* ===== Back to Top Button ===== */
+#back-to-top {
+    @apply fixed bottom-8 right-8 w-12 h-12 bg-gold-500 text-navy-900 rounded-full flex items-center justify-center z-50 shadow-lg shadow-gold-500/25 cursor-pointer transition-all duration-300 hover:bg-gold-400 hover:-translate-y-1 hover:shadow-xl hover:shadow-gold-500/30;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+#back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* ===== Page Transition ===== */
+.page-transition-overlay {
+    @apply fixed inset-0 bg-navy-950 z-[9999] pointer-events-none;
+    transform: scaleY(0);
+    transform-origin: bottom;
+}
+
+/* ===== Film Strip (About page) ===== */
+.film-strip {
+    @apply flex gap-4 overflow-hidden;
+}
+
+.film-strip-item {
+    @apply flex-shrink-0 w-64 h-40 md:w-80 md:h-52 overflow-hidden rounded-lg;
+}
+
+/* ===== Service zigzag ===== */
+.zigzag-section:nth-child(even) .zigzag-content {
+    @apply md:order-2;
+}
+
+.zigzag-section:nth-child(even) .zigzag-image {
+    @apply md:order-1;
+}
+
+/* ===== Image hover zoom ===== */
+.img-hover-zoom {
+    @apply overflow-hidden;
+}
+
+.img-hover-zoom img {
+    @apply transition-transform duration-700 ease-out;
+}
+
+.img-hover-zoom:hover img {
+    @apply scale-105;
+}
