@@ -21,10 +21,20 @@ class SiteSetting extends Model
      */
     public static function get(string $key, mixed $default = null): mixed
     {
-        return Cache::remember("site_setting_{$key}", 3600, function () use ($key, $default) {
-            $setting = static::where('key', $key)->first();
-            return $setting ? $setting->value : $default;
-        });
+        try {
+            return Cache::remember("site_setting_{$key}", 3600, function () use ($key, $default) {
+                $setting = static::where('key', $key)->first();
+                return $setting ? $setting->value : $default;
+            });
+        } catch (\Exception $e) {
+            // If cache or database fails, return default
+            try {
+                $setting = static::where('key', $key)->first();
+                return $setting ? $setting->value : $default;
+            } catch (\Exception $e) {
+                return $default;
+            }
+        }
     }
 
     /**
