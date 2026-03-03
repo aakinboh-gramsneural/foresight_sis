@@ -81,12 +81,34 @@ try {
         '/tmp/storage/logs',
         '/tmp/storage/app',
         '/tmp/cache',
+        '/tmp/database',
     ];
 
     foreach ($dirs as $dir) {
         if (!is_dir($dir)) {
             @mkdir($dir, 0755, true);
         }
+    }
+
+    // Handle SQLite database for serverless
+    $dbPath = '/tmp/database/database.sqlite';
+    if (!file_exists($dbPath)) {
+        // Create empty database file
+        touch($dbPath);
+        chmod($dbPath, 0666);
+        
+        // Set database path in environment
+        putenv("DB_DATABASE=$dbPath");
+        $_ENV['DB_DATABASE'] = $dbPath;
+        
+        // Run migrations to create tables
+        $artisan = require $basePath . '/bootstrap/app.php';
+        $kernel = $artisan->make(Illuminate\Contracts\Console\Kernel::class);
+        $kernel->call('migrate', ['--force' => true, '--seed' => true]);
+    } else {
+        // Database exists, just set the path
+        putenv("DB_DATABASE=$dbPath");
+        $_ENV['DB_DATABASE'] = $dbPath;
     }
 
     // Handle the request
