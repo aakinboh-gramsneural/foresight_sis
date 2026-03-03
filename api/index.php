@@ -92,24 +92,23 @@ try {
 
     // Handle SQLite database for serverless
     $dbPath = '/tmp/database/database.sqlite';
+    $sourceDbPath = $basePath . '/database/database.sqlite';
+    
     if (!file_exists($dbPath)) {
-        // Create empty database file
-        touch($dbPath);
-        chmod($dbPath, 0666);
-        
-        // Set database path in environment
-        putenv("DB_DATABASE=$dbPath");
-        $_ENV['DB_DATABASE'] = $dbPath;
-        
-        // Run migrations to create tables
-        $artisan = require $basePath . '/bootstrap/app.php';
-        $kernel = $artisan->make(Illuminate\Contracts\Console\Kernel::class);
-        $kernel->call('migrate', ['--force' => true, '--seed' => true]);
-    } else {
-        // Database exists, just set the path
-        putenv("DB_DATABASE=$dbPath");
-        $_ENV['DB_DATABASE'] = $dbPath;
+        // Copy the pre-seeded database from the project
+        if (file_exists($sourceDbPath)) {
+            copy($sourceDbPath, $dbPath);
+            chmod($dbPath, 0666);
+        } else {
+            // Create empty database if source doesn't exist
+            touch($dbPath);
+            chmod($dbPath, 0666);
+        }
     }
+    
+    // Set database path in environment
+    putenv("DB_DATABASE=$dbPath");
+    $_ENV['DB_DATABASE'] = $dbPath;
 
     // Handle the request
     $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
