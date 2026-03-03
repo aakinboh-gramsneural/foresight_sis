@@ -102,12 +102,21 @@ try {
     
 } catch (\Throwable $e) {
     http_response_code(500);
-    echo "Laravel Error: " . $e->getMessage() . "\n\n";
-    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n\n";
     
-    if (getenv('APP_DEBUG') === 'true') {
-        echo "Stack trace:\n" . $e->getTraceAsString();
-    } else {
-        echo "Set APP_DEBUG=true in Vercel environment variables to see full stack trace.";
-    }
+    // Always show detailed errors for debugging
+    echo "<!DOCTYPE html><html><head><title>Error</title></head><body>";
+    echo "<h1>Laravel Error</h1>";
+    echo "<p><strong>Message:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p><strong>File:</strong> " . htmlspecialchars($e->getFile()) . ":" . $e->getLine() . "</p>";
+    echo "<h2>Stack Trace:</h2>";
+    echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+    echo "<h2>Environment Info:</h2>";
+    echo "<pre>";
+    echo "Base Path: " . htmlspecialchars($basePath) . "\n";
+    echo "Vendor exists: " . (file_exists($basePath . '/vendor/autoload.php') ? 'YES' : 'NO') . "\n";
+    echo "Bootstrap exists: " . (file_exists($basePath . '/bootstrap/app.php') ? 'YES' : 'NO') . "\n";
+    echo "APP_KEY set: " . (getenv('APP_KEY') ? 'YES' : 'NO') . "\n";
+    echo "VERCEL env: " . (isset($_ENV['VERCEL']) ? 'YES' : 'NO') . "\n";
+    echo "</pre>";
+    echo "</body></html>";
 }
